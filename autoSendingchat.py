@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import time
 
-print("Ask anything! I know everything Ha Ha")
+print("Question:")
 
 input_String = input()
 credential_Array = []
@@ -21,26 +21,42 @@ with open('credential/loginForGPT.txt') as f:
 
 mail = credential_Array[0]
 password = credential_Array[1]
-
 # Replace with the path to your ChromeDriver
 # Start a webdriver instance and open ChatGPT
 driver = webdriver.Chrome()
 driver.get('https://chat.openai.com')
-
-# Wait for the page to load
-time.sleep(5)       
-
-# Find the input field and send a question
-wait = WebDriverWait(driver, 10)
-textarea = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "textarea[data-id='root'")))
-textarea.send_keys(input_String)
-
-# Press "Enter" to send the message
-textarea.send_keys(Keys.RETURN)
-
-# Find the response and save it to a file
-response = driver.find_element_by_class_name('markdown').text
-
-# Close the browser after some time (optional)
-time.sleep(10)
+  
+try:
+    driver.minimize_window()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Log in"]')))
+    
+    login_button = driver.find_element(By.XPATH, '//div[text()="Log in"]').click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "username")))
+    email = driver.find_element(By.ID, "username").send_keys(mail)
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//button[text()="Continue"]')))
+    continue_button = driver.find_element(By.XPATH, '//button[text()="Continue"]').click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "password")))
+    password = driver.find_element(By.ID, "password").send_keys(password)
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.CLASS_NAME, "_button-login-password")))
+    continue_button_next = driver.find_element(By.CLASS_NAME, "_button-login-password").click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Next"]')))
+    next_button = driver.find_element(By.XPATH, '//div[text()="Next"]').click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Next"]')))
+    next_button = driver.find_element(By.XPATH, '//div[text()="Next"]').click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Done"]')))
+    next_button = driver.find_element(By.XPATH, '//div[text()="Done"]').click()
+    prompt_textarea = WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "prompt-textarea")))
+    input_textarea = driver.find_element(By.ID, "prompt-textarea").send_keys(input_String)
+    prompt_textarea.send_keys(Keys.RETURN)
+    time.sleep(5)
+    outer_response = driver.find_element(By.CLASS_NAME, "markdown")
+    # Get children of outer_response
+    children = outer_response.find_elements(By.XPATH, '*')
+    # Itertae over the children
+    for child in children:
+        print("\n")
+        print("Answer:")
+        print(child.get_attribute('innerHTML'))
+except TimeoutError:
+    print("Network error")
 driver.quit()
