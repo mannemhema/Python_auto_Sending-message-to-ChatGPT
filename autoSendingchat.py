@@ -49,25 +49,27 @@ try:
 
     print("Question:")
     input_String = input()
+    i = 0
     while input_String != "exit":
         prompt_textarea = WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "prompt-textarea")))
         input_textarea = driver.find_element(By.ID, "prompt-textarea").send_keys(input_String)
         prompt_textarea.send_keys(Keys.RETURN)
 
         time.sleep(5)
-        outer_response = driver.find_element(By.CLASS_NAME, "markdown")
+        outer_response = driver.find_elements(By.CLASS_NAME, "markdown")
 
         # Get children of outer_response
-        children = outer_response.find_elements(By.XPATH, '*')
+        children = outer_response[i].find_elements(By.XPATH, '*')
         # Itertae over the children
         for child in children:
             print("\n")
             print("Answer:")
             print(child.get_attribute('innerHTML'))
+        i += 1
         input_String = ""
         print("-----------------------------------------------------------------------------------------------------------------------")
         print("\n")
-        print("Click 'exit' to close chatting!")
+        print("Question:")
         input_String = input()
 except TimeoutError:
     print("Network error")
