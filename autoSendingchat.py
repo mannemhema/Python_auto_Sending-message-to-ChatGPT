@@ -4,6 +4,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 import time
 
@@ -20,14 +21,17 @@ with open('credential/loginForGPT.txt') as f:
 mail = credential_Array[0]
 password = credential_Array[1]
 
+
 # Start a webdriver instance and open ChatGPT
-driver = webdriver.Chrome()
+options = Options()
+options.add_argument('--headless=new')
+driver = webdriver.Chrome(options=options)
 driver.get('https://chat.openai.com')
-  
+
 try:
-    driver.minimize_window()
+    # driver.minimize_window()
     WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Log in"]')))
-    
+
     login_button = driver.find_element(By.XPATH, '//div[text()="Log in"]').click()
     WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "username")))
     email = driver.find_element(By.ID, "username").send_keys(mail)
