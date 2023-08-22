@@ -44,12 +44,7 @@ try:
     WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.CLASS_NAME, "_button-login-password")))
     continue_button_next = driver.find_element(By.CLASS_NAME, "_button-login-password").click()
 
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Next"]')))
-    next_button = driver.find_element(By.XPATH, '//div[text()="Next"]').click()
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Next"]')))
-    next_button = driver.find_element(By.XPATH, '//div[text()="Next"]').click()
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Done"]')))
-    next_button = driver.find_element(By.XPATH, '//div[text()="Done"]').click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(text(), 'Okay, let’s go')]"))).click()
 
     print("Question:")
     input_String = input()
@@ -70,11 +65,15 @@ try:
             print("Answer:")
             print(child.get_attribute('innerHTML'))
         i += 1
-        input_String = ""
         print("-----------------------------------------------------------------------------------------------------------------------")
         print("\n")
         print("Question:")
         input_String = input()
 except TimeoutError:
     print("Network error")
+
+# delete before exit
+WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//button[@class='p-1 hover:text-white'][2]"))).click()
+WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//div[contains(text(),'Delete')]"))).click()
+
 driver.quit()
