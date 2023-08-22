@@ -54,10 +54,12 @@ try:
         input_textarea = driver.find_element(By.ID, "prompt-textarea").send_keys(input_String)
         prompt_textarea.send_keys(Keys.RETURN)
 
-        time.sleep(5)
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, f'(//div[contains(@class, \'markdown\')])[{i+1}]')))
+        WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, '.result-streaming')))
+
         outer_response = driver.find_elements(By.CLASS_NAME, "markdown")
 
-        # Get children of outer_response
+        # Get children of outer_responset
         children = outer_response[i].find_elements(By.XPATH, '*')
         # Itertae over the children
         for child in children:
