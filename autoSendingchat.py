@@ -6,21 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
-import time
-
-# Get mail and password from .txt outside
-credential_Array = []
-
-with open('credential/loginForGPT.txt') as f:
-    lines = f.readlines()
-    for line in lines:
-        credential = line.split("\n")[0].split("=")[1]
-        # print(credential)
-        credential_Array.append(credential)
-
-mail = credential_Array[0]
-password = credential_Array[1]
-
+from LoginHandle import LoginHandle
 
 # Start a webdriver instance and open ChatGPT
 options = Options()
@@ -28,24 +14,10 @@ options.add_argument('--headless=new')
 driver = webdriver.Chrome(options=options)
 driver.get('https://chat.openai.com')
 
+login_handle = LoginHandle(driver)
+login_handle.login()
+
 try:
-    # driver.minimize_window()
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Log in"]')))
-
-    login_button = driver.find_element(By.XPATH, '//div[text()="Log in"]').click()
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "username")))
-    email = driver.find_element(By.ID, "username").send_keys(mail)
-
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, '//button[text()="Continue"]')))
-    continue_button = driver.find_element(By.XPATH, '//button[text()="Continue"]').click()
-
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.ID, "password")))
-    password = driver.find_element(By.ID, "password").send_keys(password)
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.CLASS_NAME, "_button-login-password")))
-    continue_button_next = driver.find_element(By.CLASS_NAME, "_button-login-password").click()
-
-    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(text(), 'Okay, let’s go')]"))).click()
-
     print("Question:")
     input_String = input()
     i = 0
