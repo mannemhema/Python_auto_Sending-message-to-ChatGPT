@@ -12,7 +12,7 @@ class LoginHandle:
     def login(self):
         is_logged_in = self.loginWithCookies()
         if not is_logged_in:
-            print('trying to login with u/p')
+            print('trying to login with username and password')
             self.loginWithUserNamePassword()
 
     def getUserNamePassword(self):
@@ -40,10 +40,10 @@ class LoginHandle:
         self.driver.get('https://chat.openai.com/')
         try:
             WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located((By.XPATH, f"//div[contains(text(), 'Okay, let’s go')]"))).click()
-            print('login success')
+            print('login success with cookies')
             return True
         except:
-            print('login failed')
+            print('login did not work with cookies')
             return False
     
     def storeCookies(self):
