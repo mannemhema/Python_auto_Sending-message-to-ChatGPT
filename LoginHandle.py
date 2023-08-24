@@ -3,7 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import json
-import time
+import os
+
+COOKIES_FILE_PATH = 'credential/cookies.txt'
+CREDENTIAL_FILE_PATH = 'credential/loginForGPT.txt'
 
 class LoginHandle:
     def __init__(self, driver):
@@ -17,7 +20,7 @@ class LoginHandle:
 
     def getUserNamePassword(self):
         credential_Array = []
-        with open('credential/loginForGPT.txt') as f:
+        with open(CREDENTIAL_FILE_PATH) as f:
             lines = f.readlines()
             for line in lines:
                 credential = line.split("\n")[0].split("=")[1]
@@ -50,13 +53,15 @@ class LoginHandle:
          # Get the cookies from the driver
         cookies = self.driver.get_cookies()
         # Write cookies to the output file
-        with open('credential/cookies.txt', 'w') as f:
+        with open(COOKIES_FILE_PATH, 'w') as f:
             for cookie in cookies:
                 f.write(json.dumps(cookie) + "\n")
 
     def loadCookies(self):
+        if not os.path.exists(COOKIES_FILE_PATH):
+            return
          # Read cookies from the input file
-        with open('credential/cookies.txt', 'r') as f:
+        with open(COOKIES_FILE_PATH, 'r') as f:
             cookies = f.read().splitlines()
     
          # Add each cookie to the driver's session
