@@ -10,7 +10,7 @@ from LoginHandle import LoginHandle
 
 # Start a webdriver instance and open ChatGPT
 options = Options()
-# options.add_argument('--headless=new')
+options.add_argument('--headless=new')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36")
 driver = webdriver.Chrome(options=options)
 driver.get('https://chat.openai.com')
