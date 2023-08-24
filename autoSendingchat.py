@@ -32,7 +32,7 @@ try:
 
         outer_response = driver.find_elements(By.CLASS_NAME, "markdown")
 
-        # Get children of outer_responset
+        # Get children of outer_response
         children = outer_response[i].find_elements(By.XPATH, '*')
         # Itertae over the children
         for child in children:
