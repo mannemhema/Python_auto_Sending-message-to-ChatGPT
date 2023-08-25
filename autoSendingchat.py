@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
 
 from LoginHandle import LoginHandle
 
@@ -34,21 +35,23 @@ try:
 
         # Get children of outer_response
         children = outer_response[i].find_elements(By.XPATH, '*')
-        # Itertae over the children
+        print("Answer:")
+        # Iterate over the children
         for child in children:
             print("\n")
-            print("Answer:")
             print(child.get_attribute('innerHTML'))
         i += 1
         print("-----------------------------------------------------------------------------------------------------------------------")
         print("\n")
         print("Question:")
         input_String = input()
+    
+    # delete before exit
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//button[@class='p-1 hover:text-white'][2]"))).click()
+    WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//div[contains(text(),'Delete')]"))).click()
 except TimeoutError:
     print("Network error")
-
-# delete before exit
-WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//button[@class='p-1 hover:text-white'][2]"))).click()
-WebDriverWait(driver, 60).until(EC.visibility_of_element_located((By.XPATH, "//div[contains(text(),'Delete')]"))).click()
+except TimeoutException:
+    print('Possibly there is a captcha, uncomment headless and increase timeout after send_keys RETURN to solve the puzzle manually')
 
 driver.quit()
